@@ -56,7 +56,7 @@ replace_linear_in_hf(model, keep_param=True)
 print(model)
 ```
 ### Training loss
-placeholder
+![loss](img/loss.png)
 
 ## License
 This project is licensed under the MIT License.
