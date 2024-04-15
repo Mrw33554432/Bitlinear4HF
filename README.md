@@ -33,7 +33,7 @@ tokenizer = AutoTokenizer.from_pretrained("microsoft/phi-1_5", trust_remote_code
 model = AutoModelForCausalLM.from_pretrained("microsoft/phi-1_5", trust_remote_code=True)
 
 # Replace all linear layers with BitLinear, except for lm_head
-replace_linear_in_hf(model, keep_param=True)
+replace_linear_in_hf(model, keep_param=False)
 
 print(model)
 ```
