@@ -30,7 +30,7 @@ from replace_hf import replace_linear_in_hf
 
 # Initialize tokenizer and model
 tokenizer = AutoTokenizer.from_pretrained("microsoft/phi-1_5", trust_remote_code=True)
-model = AutoModelForCausalLM.from_pretrained("microsoft/phi-1_5", trust_remote_code=True, torch_dtype=torch.float16)
+model = AutoModelForCausalLM.from_pretrained("microsoft/phi-1_5", trust_remote_code=True)
 
 # Replace all linear layers with BitLinear, except for lm_head
 replace_linear_in_hf(model, keep_param=False)
@@ -49,8 +49,7 @@ you will still manually run `replace_linear_in_hf(model, keep_param=True)` to ma
 torch.set_default_device("cuda")
 
 tokenizer = AutoTokenizer.from_pretrained("microsoft/phi-1_5", trust_remote_code=True)
-model = AutoModelForCausalLM.from_pretrained("Mrw33554432/bitLinear-phi-1.5", trust_remote_code=True,
-                                             torch_dtype=torch.float16)
+model = AutoModelForCausalLM.from_pretrained("Mrw33554432/bitLinear-phi-1.5", trust_remote_code=True)
 
 print(model)
 
