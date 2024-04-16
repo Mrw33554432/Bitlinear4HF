@@ -3,7 +3,7 @@ import torch
 import optimized_bitlinear as obl
 import torch.nn.functional as F
 
-dtype = torch.float16
+dtype = torch.float32
 run = 100
 
 
@@ -12,11 +12,11 @@ def create_special_matrix(size, device, dtype):
     return torch.randint(-1, 2, size, device=device, dtype=dtype)
 
 
-bias = torch.randn(8192, device='cuda', dtype=dtype)
+bias = torch.randn(4096, device='cuda', dtype=dtype)
 
 # Example for 3D (batch processing)
-A_batch = torch.randn(256, 256, 2048, device='cuda', dtype=dtype)
-B_batch = create_special_matrix((8192, 2048), device='cuda', dtype=dtype)
+A_batch = torch.randn(1, 4096, 2048, device='cuda', dtype=dtype)
+B_batch = create_special_matrix((4096, 2048), device='cuda', dtype=dtype)
 
 # Timing F.linear for batch
 for _ in range(run):
@@ -26,6 +26,8 @@ for _ in range(run):
     C_batch_torch = F.linear(A_batch, B_batch, bias)
 torch_batch_time = time.time() - start_time
 
+B_batch = B_batch.to(dtype=torch.int8)
+print(B_batch.dtype)
 # Timing custom method for batch
 for _ in range(run):
     _ = obl.mat_mul(A_batch, B_batch, bias)

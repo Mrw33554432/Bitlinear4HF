@@ -27,10 +27,13 @@ tokenizer = AutoTokenizer.from_pretrained("microsoft/phi-1_5", trust_remote_code
 model = AutoModelForCausalLM.from_pretrained(model_path, trust_remote_code=True)
 tokenizer.pad_token = tokenizer.eos_token
 model.config.use_cache = False
+model.requires_grad = False
+
 print(model)
 # Replace Linear layers with BitLinear
-replace_linear_in_hf(model, keep_param=True)
+replace_linear_in_hf(model, keep_param=True, custom_kernel=True)
 print(model)
 start_time = time.time()
-quick_test(model, tokenizer, prompt="Tom is the")
+for _ in range(10):
+    quick_test(model, tokenizer, prompt="Tom is the")
 print(time.time() - start_time)

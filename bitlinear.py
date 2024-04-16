@@ -1,7 +1,7 @@
+import torch
 from torch import Tensor, nn
 import optimized_bitlinear as obl
 import torch.nn.functional as F
-import time
 
 
 def weight_quant(w):
@@ -19,7 +19,6 @@ class BitLinear(nn.Linear):
     """
     A modified version of bit linear, only apply bit quant to weight.
     """
-    t = 0
 
     def forward(self, x: Tensor) -> Tensor:
         """
@@ -32,11 +31,30 @@ class BitLinear(nn.Linear):
         w = self.weight
         w_quant = weight_quant(w)
         w_quant = w + (w_quant - w).detach()  # Apply quantization adjustments
-        return F.linear(x, w_quant,self.bias)
+        return F.linear(x, w_quant, self.bias)
 
-        # w = self.weight
-        # scale = 1.0 / w.abs().mean().clamp_(min=1e-5)
-        # scaled_weight = w * scale
-        # w_quant = (scaled_weight).round().clamp_(-1, 1)
-        # w_quant = scaled_weight + (w_quant - scaled_weight).detach()
-        # return obl.mat_mul(x / scale, w_quant, self.bias)
+
+class InferenceLinear(nn.Linear):
+    """
+    A modified version of bit linear, only apply bit quant to weight.
+    """
+
+    def __init__(self, in_features: int, out_features: int, bias: bool = True,
+                 device=None, dtype=None):
+        super().__init__(in_features, out_features, bias, device, dtype)
+        self.scale = None
+
+    def quantize_weight(self):
+        self.scale = 1.0 / self.weight.abs().mean().clamp_(min=1e-5)
+        quantized_weight = (self.weight * self.scale).round().clamp_(-1, 1).to(torch.int8)
+        self.weight = torch.nn.Parameter(quantized_weight, requires_grad=False)
+
+    def forward(self, x: Tensor) -> Tensor:
+        """
+        Forward pass of the BitLinear layer, applying quantization to weights.
+        Args:
+            x (Tensor): The input tensor.
+        Returns:
+            Tensor: The output tensor.
+        """
+        return obl.mat_mul(x / self.scale, self.weight, self.bias)
