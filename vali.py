@@ -1,3 +1,4 @@
+import gc
 import os
 import time
 import torch
@@ -34,5 +35,6 @@ replace_linear_in_hf(model, keep_param=True, custom_kernel=True)
 print(model)
 
 start_time = time.time()
-quick_test(model, tokenizer, prompt="Tom is the")
+for _ in range(10):
+    quick_test(model, tokenizer, prompt="Tom is the")
 print(time.time() - start_time)

@@ -47,7 +47,8 @@ class InferenceLinear(nn.Linear):
     def quantize_weight(self):
         self.scale = 1.0 / self.weight.abs().mean().clamp_(min=1e-5)
         quantized_weight = (self.weight * self.scale).round().clamp_(-1, 1).to(torch.int8)
-        self.weight = torch.nn.Parameter(quantized_weight, requires_grad=False)
+        self.weight.requires_grad = False
+        self.weight.data = quantized_weight
 
     def forward(self, x: Tensor) -> Tensor:
         """
