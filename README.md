@@ -66,7 +66,7 @@ So it's not recommended to use the kernel at this moment, but you can still try 
 cd kernel
 python setup.py install
 ```
-notice VS C++ build tool is required
+NOTICE: VS C++ build tool is required
 
 ## License
 This project is licensed under the MIT License.
