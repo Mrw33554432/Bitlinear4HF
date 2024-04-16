@@ -37,8 +37,9 @@ replace_linear_in_hf(model, keep_param=False)
 
 print(model)
 ```
+Notice: the custom kernel does not support training yet
 
-## Pretrained Model
+## Pretrained Model and Inference
 https://huggingface.co/Mrw33554432/bitLinear-phi-1.5
 
 you will still manually run `replace_linear_in_hf(model, keep_param=True)` to make it a BitLinear model 
@@ -51,8 +52,15 @@ tokenizer = AutoTokenizer.from_pretrained("microsoft/phi-1_5", trust_remote_code
 model = AutoModelForCausalLM.from_pretrained("Mrw33554432/bitLinear-phi-1.5", trust_remote_code=True)
 
 print(model)
+
+# Choose one from the two options. You have to install custom kernel to get the custom_kernel=True works
+
 # Replace Linear layers with BitLinear
-replace_linear_in_hf(model, keep_param=True)
+replace_linear_in_hf(model, keep_param=True) # 2.04s, output: Tom is the name of some places in the U.S. state of Wisconsin:
+
+# significantly faster, for inference
+replace_linear_in_hf(model, keep_param=True, custom_kernel=True) # 0.78s, same output
+
 print(model)
 ```
 ### Training loss
@@ -66,7 +74,7 @@ So it's not recommended to use the kernel at this moment, but you can still try 
 cd kernel
 python setup.py install
 ```
-NOTICE: VS C++ build tool is required
+Notice: VS C++ build tool required
 
 ## License
 This project is licensed under the MIT License.

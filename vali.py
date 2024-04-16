@@ -15,7 +15,7 @@ def quick_test(model, tokenizer, prompt: str):
     inputs = tokenizer.encode(prompt, return_tensors="pt")
 
     # Generate outputs
-    outputs = model.generate(inputs, max_length=50)
+    outputs = model.generate(inputs, max_length=18)
 
     # Decode and print the outputs
     print(tokenizer.decode(outputs[0]))
@@ -27,13 +27,12 @@ tokenizer = AutoTokenizer.from_pretrained("microsoft/phi-1_5", trust_remote_code
 model = AutoModelForCausalLM.from_pretrained(model_path, trust_remote_code=True)
 tokenizer.pad_token = tokenizer.eos_token
 model.config.use_cache = False
-model.requires_grad = False
 
-print(model)
 # Replace Linear layers with BitLinear
+print(model)
 replace_linear_in_hf(model, keep_param=True, custom_kernel=True)
 print(model)
+
 start_time = time.time()
-for _ in range(10):
-    quick_test(model, tokenizer, prompt="Tom is the")
+quick_test(model, tokenizer, prompt="Tom is the")
 print(time.time() - start_time)
