@@ -31,12 +31,14 @@ def replace_linear_in_hf(model, keep_param: bool, custom_kernel=False):
                     in_features=module.in_features,
                     out_features=module.out_features,
                     bias=module.bias is not None,
+                    dtype=module.weight.dtype,
                 )
             else:
                 bit_linear = InferenceLinear(
                     in_features=module.in_features,
                     out_features=module.out_features,
                     bias=module.bias is not None,
+                    dtype=module.weight.dtype,
                 )
 
             if keep_param:

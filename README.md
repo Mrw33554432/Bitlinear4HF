@@ -49,7 +49,7 @@ you will still manually run `replace_linear_in_hf(model, keep_param=True)` to ma
 torch.set_default_device("cuda")
 
 tokenizer = AutoTokenizer.from_pretrained("microsoft/phi-1_5", trust_remote_code=True)
-model = AutoModelForCausalLM.from_pretrained("Mrw33554432/bitLinear-phi-1.5", trust_remote_code=True)
+model = AutoModelForCausalLM.from_pretrained("Mrw33554432/bitLinear-phi-1.5", trust_remote_code=True, torch_dtype=torch.float16)
 
 print(model)
 

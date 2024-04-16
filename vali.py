@@ -24,7 +24,7 @@ def quick_test(model, tokenizer, prompt: str):
 torch.set_default_device("cuda")
 
 tokenizer = AutoTokenizer.from_pretrained("microsoft/phi-1_5", trust_remote_code=True)
-model = AutoModelForCausalLM.from_pretrained(model_path, trust_remote_code=True)
+model = AutoModelForCausalLM.from_pretrained(model_path, trust_remote_code=True, torch_dtype=torch.float16)
 tokenizer.pad_token = tokenizer.eos_token
 model.config.use_cache = False
 
