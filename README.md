@@ -59,7 +59,7 @@ print(model)
 ![loss](img/loss.png)
 
 ## Kernel
-After some tests, the custom cuda kernel does not seem to improve the inference speed, even if it is faster than general `F.linear` in test. Additionally, the computation of QKVO projection only takes minor portion of time during inference.
+After some tests, the custom cuda kernel does not seem to improve the overall model inference speed, even if it is faster than general `F.linear` in test. Additionally, the computation of QKVO projection only takes minor portion of time during inference.
 
 So it's not recommended to use the kernel at this moment, but you can still try it yourself by
 ```
