@@ -14,8 +14,8 @@ It takes 16 hours to train the pretrained `bitlinear-phi-1.5` on single 3090.
 ## Requirements
 - PyTorch
 - Transformers
-- Datasets
-- Bitsandbytes
+- Datasets (Only for training)
+- Bitsandbytes (Only if you want to use 8 bit during training)
 
 ## Training Example
 Run `train.py`. It uses huggingface `transformers` `Trainer`, 8bit adamW optimizer, fp16 training.
