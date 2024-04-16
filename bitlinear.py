@@ -1,5 +1,7 @@
-import torch.nn.functional as F
 from torch import Tensor, nn
+import optimized_bitlinear as obl
+import torch.nn.functional as F
+import time
 
 
 def weight_quant(w):
@@ -17,6 +19,7 @@ class BitLinear(nn.Linear):
     """
     A modified version of bit linear, only apply bit quant to weight.
     """
+    t = 0
 
     def forward(self, x: Tensor) -> Tensor:
         """
@@ -27,5 +30,13 @@ class BitLinear(nn.Linear):
             Tensor: The output tensor.
         """
         w = self.weight
-        w_quant = w + (weight_quant(w) - w).detach()  # Apply quantization adjustments
-        return F.linear(x, w_quant, self.bias)
+        w_quant = weight_quant(w)
+        w_quant = w + (w_quant - w).detach()  # Apply quantization adjustments
+        return F.linear(x, w_quant,self.bias)
+
+        # w = self.weight
+        # scale = 1.0 / w.abs().mean().clamp_(min=1e-5)
+        # scaled_weight = w * scale
+        # w_quant = (scaled_weight).round().clamp_(-1, 1)
+        # w_quant = scaled_weight + (w_quant - scaled_weight).detach()
+        # return obl.mat_mul(x / scale, w_quant, self.bias)
