@@ -30,7 +30,7 @@ from replace_hf import replace_linear_in_hf
 
 # Initialize tokenizer and model
 tokenizer = AutoTokenizer.from_pretrained("microsoft/phi-1_5", trust_remote_code=True)
-model = AutoModelForCausalLM.from_pretrained("microsoft/phi-1_5", trust_remote_code=True)
+model = AutoModelForCausalLM.from_pretrained("microsoft/phi-1_5", trust_remote_code=True, torch_dtype=torch.float16)
 
 # Replace all linear layers with BitLinear, except for lm_head
 replace_linear_in_hf(model, keep_param=False)
@@ -49,17 +49,19 @@ you will still manually run `replace_linear_in_hf(model, keep_param=True)` to ma
 torch.set_default_device("cuda")
 
 tokenizer = AutoTokenizer.from_pretrained("microsoft/phi-1_5", trust_remote_code=True)
-model = AutoModelForCausalLM.from_pretrained("Mrw33554432/bitLinear-phi-1.5", trust_remote_code=True, torch_dtype=torch.float16)
+model = AutoModelForCausalLM.from_pretrained("Mrw33554432/bitLinear-phi-1.5", trust_remote_code=True,
+                                             torch_dtype=torch.float16)
 
 print(model)
 
 # Choose one from the two options. You have to install custom kernel to get the custom_kernel=True works
 
 # Replace Linear layers with BitLinear
-replace_linear_in_hf(model, keep_param=True) # 2.04s, output: Tom is the name of some places in the U.S. state of Wisconsin:
+replace_linear_in_hf(model,
+                     keep_param=True)  # 2.04s, output: Tom is the name of some places in the U.S. state of Wisconsin:
 
 # significantly faster, for inference
-replace_linear_in_hf(model, keep_param=True, custom_kernel=True) # 0.78s, same output
+replace_linear_in_hf(model, keep_param=True, custom_kernel=True)  # 0.78s, same output
 
 print(model)
 ```
