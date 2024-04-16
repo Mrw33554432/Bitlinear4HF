@@ -58,6 +58,16 @@ print(model)
 ### Training loss
 ![loss](img/loss.png)
 
+## Kernel
+After some tests, the custom cuda kernel does not seem to improve the inference speed, even if it is faster than general `F.linear` in test. Additionally, the computation of QKVO projection only takes minor portion of time during inference.
+
+So it's not recommended to use the kernel at this moment, but you can still try it yourself by
+```
+cd kernel
+python setup.py install
+```
+notice VS C++ build tool is required
+
 ## License
 This project is licensed under the MIT License.
 
