@@ -94,6 +94,8 @@ replace `obl.mat_mul(x / self.scale, self.weight, self.bias)` with `F.linear(x /
 
 Notice 2: The `obl.mat_mul(x,w,b)` expect `w` being the weight matrix and only contain -1,0,1. The kernel use a multiply free Implementation.
 
+Notice 3: The kernel can be optimized further, but it takes time. Contribution welcomed. 
+
 ### Training loss
 
 ![loss](img/loss.png)
